@@ -5,13 +5,13 @@ The github home for ShaneSmit's public movieclip converter for Starling.
 
 Version 1.4 has been downloaded from the Starling Forum and posted here for the community to continue improvements.
 
-Forum:
+**Forum**
 http://forum.starling-framework.org/topic/flash-movieclip-converter-preserves-display-list-hierarchy
 
-Orig code: (posted here)
+**Orig code: (posted here)**
 http://digitalloom.org/CodeWeaver/FlashMovieClipConverter-1.4.zip
 
-Shane's origional Post (October, 2012):
+**Shane's origional Post (October, 2012):**
 
 
 I started looking at Starling 2 days ago, and quickly realized a great truth that I'm sure you are all very familiar with: Starling MovieClip != Flash MovieClip.
