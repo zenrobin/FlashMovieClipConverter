@@ -47,3 +47,36 @@ Starling.juggler.add( animSprite );
 The code is quite limited... it only handles animation of position, rotation, scale, and alpha. But that's 90% of what I usually animate anyway. It was intended to convert Flash MovieClips loaded from SWF files without any AS linkage (as required by iOS), so I can't guarantee it'll work in other situations. Furthermore, I can't spend time supporting it... so if you improve it, just post it back to this thread.
 
 Forgive me if someone else has already created something like this. The only thing I was able to find was emibap's Dynamic Texture Atlas Generator, which didn't appear to do what I wanted.
+
+
+**Usage**
+
+Flash Movie Clip Converter - Converts a Flash MovieClip to a Starling IAnimatable
+                             Sprite.
+
+This code can be used in one of two ways:
+
+1) Convert an in-memory Flash MovieClip object to a ConvertedMovieClip object:
+
+var animSprite:ConvertedMovieClip = FlashMovieClipConverter.convert( flashMC );
+Starling.juggler.add( animSprite );
+
+2) Export the MovieClip information, then import this data at runtime.
+
+  a) Install 'StarlingConverter.air' by double-clicking it. (Windows or Mac)
+  b) Open up a command prompt ('terminal' on Mac), and navigate to where your
+     .swf file is located.
+  c) Run '/path/to/installed/StarlingConverter MyMovie.swf'. Output files will
+     be placed in the current working directory. (There is no console output)
+  d) Optional: Multiple .swf files can be specified on the single invocation.
+               Use the '-noSortBitmaps' to skip presorting the bitmaps before
+               they are placed in the atlas image.
+  e) Import with the following as3 pseudo-code:
+
+var clipData:XML = // Load MyMovie-clipData.xml
+var atlasBitmaps:Vector.<BitmapData> = // Load MyMovie-atlas1.png (and atlas2, atlas3, etc.)
+var animSprite:ConvertedMovieClip = FlashMovieClipImporter.importFromXML( clipData, atlasBitmaps );
+Starling.juggler.add( animSprite );
+
+For updates, questions, comments, and rants, see the forum thread at:
+http://forum.starling-framework.org/topic/flash-movieclip-converter-preserves-display-list-hierarchy
