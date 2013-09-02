@@ -115,7 +115,7 @@ package ssmit
 			var texture:Texture = atlases[ atlasIndex ].getTexture( regionName );
 			
 			// Annoyingly, I can't seem to find a way to create the image at the smaller size without a dummy texture.
-			var dummyTexture:Texture = Texture.empty( texture.width - (TextureList.PADDING*2), texture.height - (TextureList.PADDING*2) );
+			var dummyTexture:Texture = Texture.empty( texture.width - (TextureList.PADDING*2), texture.height - (TextureList.PADDING*2), true, false, false, 1.0 );
 			var image:Image = new Image( dummyTexture );
 			dummyTexture.dispose();
 			image.texture = texture;

@@ -84,7 +84,13 @@ package ssmit
 					var bitmapInfo:BitmapInfo = _textureList.getBitmapInfoFromDisplayObject( displayObject );
 					
 					// Create a dummy texture for now. Will be replaced later after all the bitmaps have been packed.
-					var image:Image = new Image( Texture.empty( bitmapInfo._bitmapData.width - (TextureList.PADDING*2), bitmapInfo._bitmapData.height - (TextureList.PADDING*2) ) );
+					var image:Image = new Image( Texture.empty( 
+																bitmapInfo._bitmapData.width - (TextureList.PADDING*2), 
+																bitmapInfo._bitmapData.height - (TextureList.PADDING*2),
+																true,
+																false,
+																false,
+																1.0 ) );
 					convertedObject = image;
 					
 					// Adjust texture coordinates to account for padding.
