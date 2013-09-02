@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+<project name="mcconverter" basedir="../src" default="build">
+
+<property file="C:\meez\svn.donnerwood\meeznation\trunk\build.properties" />
+
+<property name="deploy.dir" location="C:\meez\svn.donnerwood\meeznation\trunk\mobile\lib\mcconverter"/>
+<property name="src.dir" location="." />
+<property name="config.xml" location="../build/config.xml"/>
+
+<import file="C:\meez\svn.donnerwood\meeznation\trunk\support\ant\flex.xml"/>
+
+<target name="build" description="Builds the library (.swc file)">
+<mkdir dir="${deploy.dir}"/>
+
+	<compc 
+		src="${src.dir}"
+		configxml="${config.xml}"
+		debug="false"
+		sdkConfig="air"
+		sdkPath="C:/Program Files (x86)/FlashDevelop/Tools/flexsdk"
+		output="${deploy.dir}/${ant.project.name}.swc">
+		<arg line="-external-library-path+=C:\meez\svn.donnerwood\meeznation\trunk\mobile\lib\starling\starling.swc"/>
+	</compc>
+
+</target>
+	
+</project>

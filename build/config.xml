@@ -1,0 +1,4 @@
+<flex-config xmlns="http://www.adobe.com/2006/flex-config">
+	<target-player>11.8.0</target-player>
+	<swf-version>21</swf-version>
+</flex-config>
