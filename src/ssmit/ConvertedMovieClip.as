@@ -60,8 +60,11 @@ package ssmit
 				_juggler = null;
 			}
 			
-			_frameData.dispose();
-			_frameData = null;
+			if ( _frameData != null )
+			{
+				_frameData.dispose();
+				_frameData = null;
+			}
 			
 			// Clear out the texture atlases.
 			if( textureAtlases != null )
