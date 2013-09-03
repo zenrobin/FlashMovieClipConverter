@@ -52,6 +52,10 @@ package ssmit
 		// Cleans up everything including the textures.
 		public override function dispose() : void
 		{
+			// ensure single dispose() call
+			if ( _juggler == null )
+				return;
+				
 			super.dispose();
 			
 			if( _juggler != null )
@@ -60,11 +64,8 @@ package ssmit
 				_juggler = null;
 			}
 			
-			if ( _frameData != null )
-			{
-				_frameData.dispose();
-				_frameData = null;
-			}
+			_frameData.dispose();
+			_frameData = null;
 			
 			// Clear out the texture atlases.
 			if( textureAtlases != null )
