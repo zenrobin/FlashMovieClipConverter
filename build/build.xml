@@ -3,7 +3,8 @@
 
 <property file="C:\meez\svn.donnerwood\meeznation\trunk\build.properties" />
 
-<property name="deploy.dir" location="C:\meez\svn.donnerwood\meeznation\trunk\mobile\lib\mcconverter"/>
+<property name="lib.root" location="C:\meez\svn.donnerwood\meeznation\trunk\mobile\lib"/>
+<property name="deploy.dir" location="${lib.root}\mcconverter"/>
 <property name="src.dir" location="." />
 <property name="config.xml" location="../build/config.xml"/>
 
@@ -17,9 +18,9 @@
 		configxml="${config.xml}"
 		debug="false"
 		sdkConfig="air"
-		sdkPath="C:/Program Files (x86)/FlashDevelop/Tools/flexsdk"
+		sdkPath="${flexsdk.home}"
 		output="${deploy.dir}/${ant.project.name}.swc">
-		<arg line="-external-library-path+=C:\meez\svn.donnerwood\meeznation\trunk\mobile\lib\starling\starling.swc"/>
+		<arg line="-external-library-path+=${lib.root}\starling\starling.swc"/>
 	</compc>
 
 </target>
