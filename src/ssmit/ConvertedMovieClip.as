@@ -52,6 +52,10 @@ package ssmit
 		// Cleans up everything including the textures.
 		public override function dispose() : void
 		{
+			// ensure single dispose() call
+			if ( _juggler == null )
+				return;
+				
 			super.dispose();
 			
 			if( _juggler != null )
