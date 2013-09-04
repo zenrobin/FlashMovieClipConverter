@@ -53,8 +53,20 @@ package ssmit
 				{
 					var movieClip:MovieClip = container as flash.display.MovieClip;
 					var convertedMovieClip:ConvertedMovieClip = new ConvertedMovieClip();
-					if( displayObject.loaderInfo != null )
-						convertedMovieClip.frameRate = displayObject.loaderInfo.frameRate;
+					if ( displayObject.loaderInfo != null )
+					{
+						try
+						{
+							convertedMovieClip.frameRate = displayObject.loaderInfo.frameRate;
+						}
+						// DW (Meez): MovieClip's Loader may have had unload() called which would leave loaderInfo property not null but would not allow access to its properties (e.g. frameRate)
+						// in that case, set the frame rate to a default 24.
+						catch (e:Error)
+						{
+							convertedMovieClip.frameRate = 24;
+							trace("[FlashMovieClipConvterer] Cannot access framerate of mc's loaderInfo. Error=("+e.message+")");
+						}
+					}
 					convertedMovieClip.frameData = FrameData.importFromFlashMovieClip( movieClip, convertFrameObject );
 					convertedMovieClip.sceneData = copySceneData( movieClip );
 					convertedMovieClip.initFrame();	// Adds the first frame's children to the new ConvertedMovieClip. 
