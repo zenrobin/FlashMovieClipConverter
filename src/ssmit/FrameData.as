@@ -84,7 +84,7 @@ package ssmit
 					if( child is Shape || child is Bitmap )
 					{
 						// Child will be converted to a texture, compensate with offset.
-						var childRect:Rectangle = child.getRect( child );
+						var childRect:Rectangle = child.getBounds( child );
 						objectFrameData.transformationMatrix.tx += childRect.left;
 						objectFrameData.transformationMatrix.ty += childRect.top;
 					}
