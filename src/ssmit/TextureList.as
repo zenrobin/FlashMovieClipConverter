@@ -37,7 +37,7 @@ package ssmit
 		internal function getBitmapInfoFromDisplayObject( displayObject:DisplayObject ) : BitmapInfo
 		{
 			// Capture the shape into a BitmapData.
-			var shapeRect:Rectangle = displayObject.getRect( displayObject );
+			var shapeRect:Rectangle = displayObject.getBounds( displayObject );
 			var matrix:Matrix = new Matrix();
 			matrix.translate( (-shapeRect.left) + PADDING, (-shapeRect.top) + PADDING );
 			var bitmapData:BitmapData = new BitmapData( Math.ceil(displayObject.width) + (PADDING*2), Math.ceil(displayObject.height) + (PADDING*2), true, 0x00000000 );	// Assume transparency on everything.

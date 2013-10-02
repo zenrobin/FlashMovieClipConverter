@@ -122,7 +122,7 @@ package ssmit
 					
 					var bitmapInfo:BitmapInfo = _textureList.getBitmapInfoFromDisplayObject( displayObject ); 
 					
-					var objectRect:Rectangle = displayObject.getRect( displayObject );
+					var objectRect:Rectangle = displayObject.getBounds( displayObject );
 					var imagePosX:Number = displayObject.x + objectRect.left;
 					var imagePosY:Number = displayObject.y + objectRect.top;
 					
