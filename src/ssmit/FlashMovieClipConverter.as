@@ -73,7 +73,7 @@ package ssmit
 					}
 				}
 				convertedObject = convertedContainer;
-				convertedObject.transformationMatrix.copyFrom( displayObject.transform.matrix );
+				convertedObject.transformationMatrix = displayObject.transform.matrix.clone();
 				convertedObject.x = displayObject.x;
 				convertedObject.y = displayObject.y;
 			}
