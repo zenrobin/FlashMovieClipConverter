@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<project name="mcconverter" basedir="." default="all">
+
+<property file="build.properties"/>
+<property name="deploy.dir" location="build"/>
+<property name="src.dir" location="src" />
+<property name="config.xml" location="support/swc/config.xml"/>
+
+<import file="support/ant/air.xml"/>
+
+<!-- All -->
+<target name="all" depends="clean,build"/>
+
+<!-- Clean -->
+<target name="clean" description="Remove build files">
+    <delete dir="${deploy.dir}"/>
+</target>
+
+<!-- Build -->
+<target name="build" description="Builds the library (.swc file)">
+<mkdir dir="${deploy.dir}"/>
+
+	<compc 
+		src="${src.dir}"
+		configxml="${config.xml}"
+		debug="false"
+		sdkConfig="air"
+		sdkPath="${flexsdk.home}"
+		output="${deploy.dir}/${ant.project.name}.swc">
+		<arg line="-external-library-path+=${lib.root}\starling\starling.swc"/>
+	</compc>
+
+</target>
+	
+</project>

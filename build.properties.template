@@ -1,0 +1,5 @@
+#Path to Flex SDK
+flexsdk.home=
+
+#Path mobile lib root
+lib.root=
