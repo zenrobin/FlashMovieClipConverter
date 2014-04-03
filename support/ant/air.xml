@@ -1,0 +1,211 @@
+<project name="air" default="help" basedir=".">
+
+<!-- Definitions -->
+
+<property name="build.root" location="build"/>
+
+<property name="screen.nexusone" value="-screensize 480x854:480x854 -XscreenDPI 210"/>
+<property name="screen.iphone" value="-screensize 320x480:320x480 -XscreenDPI 165"/>
+<property name="screen.iphone4" value="-screensize 640x960:640x960 -XscreenDPI 329"/>
+<property name="screen.ipad" value="-screensize 768x1024:768x1024 -XscreenDPI 132"/>
+<property name="screen.ipad3" value="-screensize 1536x2048:1536x2048 -XscreenDPI 264"/>
+<property name="screen.kindleFire.hd" value="-screensize 800x1280:800x1280 -XscreenDPI 216"/>
+
+<!-- Advanced Telemetry -->
+<property name="advanced.telemetry" value="false"/>
+
+<!-- OS Support -->
+
+<!-- Windows Extensions -->
+<condition property="escape.quote" value='\"' else=""><os family="windows"/></condition>
+
+<!-- Windows Extensions -->
+<condition property="bat" value=".bat" else=""><os family="windows" /></condition>
+<condition property="exe" value=".exe" else=""><os family="windows" /></condition>
+
+<!-- Open File Command -->
+<condition property="shell.exec" value="start" else="open"><os family="windows" /></condition>
+
+<!-- Dependencies -->
+<property name="compiledeps.root" location="${build.root}/deps"/>
+<property name="compiledeps.as3" location="${compiledeps.root}/as3"/>
+<property name="compiledeps.lib" location="${compiledeps.root}/lib"/>
+
+<!-- Take the filesets defined by build src/swc and unzip into compiledeps tree -->
+<target name="build-deps">
+
+    <mkdir dir="${compiledeps.as3}"/>
+    <mkdir dir="${compiledeps.lib}"/>
+
+    <unzip dest="${compiledeps.as3}" overwrite="false">
+        <fileset refid="compiledeps.src"/>
+    </unzip>
+    <copy todir="${compiledeps.lib}" flatten="true">
+        <fileset refid="compiledeps.swc"/>
+    </copy>
+
+</target>
+
+<!-- Compiler -->
+
+<!-- Compile -->
+<macrodef name="mxmlc">
+    <attribute name="mainClass"/>
+    <attribute name="configXML"/>
+    <attribute name="pathRef"/>
+    <attribute name="debug"/>
+    <attribute name="output"/>
+    <attribute name="sdkPath" default="${air.sdk.home}"/>
+    <attribute name="sdkConfig" default="flex"/>
+    <element name="extra-args" implicit="yes" optional="true"/>
+    <sequential>
+        <!-- Flatten path -->
+        <pathconvert property="compile.path" pathsep=" -sp " refid="@{pathRef}"/>
+        <!-- Run compiler -->
+        <exec executable="@{sdkPath}/bin/mxmlc${exe}" failonerror="true">
+            <arg value='@{mainClass}'/>
+            <arg value='-load-config+=@{configXML}'/>
+            <arg line='-sp ${compile.path}'/>
+            <arg value='-strict'/>
+            <arg value='-debug=@{debug}'/>
+            <arg value='-define+=CONFIG::debug,@{debug}'/>
+            <arg value='-define+=CONFIG::Assert,@{debug}'/>
+            <extra-args/>
+            <arg value="+configname=@{sdkConfig}"/>
+            <arg line='-o @{output}'/>
+        </exec>
+    </sequential>
+</macrodef>
+
+<!-- Compile -->
+<macrodef name="compc">
+    <attribute name="src"/>
+    <attribute name="configXML"/>
+    <attribute name="debug"/>
+    <attribute name="output"/>
+    <attribute name="sdkPath" default="${flexsdk.home}"/>
+    <attribute name="sdkConfig" default="flex"/>
+    <element name="extra-args" implicit="yes" optional="true"/>
+    <sequential>
+        <!-- Run compiler -->
+        <exec executable="@{sdkPath}/bin/compc${exe}" failonerror="true">
+            <arg value='-load-config+=@{configXML}'/>
+            <arg line='-source-path @{src}'/>
+            <arg line='-include-sources @{src}'/>
+            <arg value='-strict'/>
+            <arg value='-debug=@{debug}'/>
+            <extra-args/>
+            <arg value="+configname=@{sdkConfig}"/>
+            <arg line='-o @{output}'/>
+        </exec>
+    </sequential>
+</macrodef>
+
+<!-- Compile -->
+<macrodef name="asc">
+    <attribute name="mainClass"/>
+    <attribute name="configXML"/>
+    <attribute name="pathRef"/>
+    <attribute name="debug"/>
+    <attribute name="output"/>
+    <attribute name="sdkPath" default="${air.sdk.home}"/>
+    <attribute name="sdkConfig" default="flex"/>
+	<attribute name="advancedTelemetry" default="${advanced.telemetry}"/>
+    <attribute name="showWarnings" default="true"/>
+    <element name="extra-args" implicit="yes" optional="true"/>
+    <sequential>
+        <!-- Flatten path -->
+        <pathconvert property="compile.path" pathsep=" -sp " refid="@{pathRef}"/>
+        <!-- Run compiler -->
+        <java jar="@{sdkPath}/lib/mxmlc-cli.jar" fork="true" failonerror="true">
+            <arg value='@{mainClass}'/>
+            <arg value='-load-config+=@{configXML}'/>
+            <arg value='-load-config+=@{sdkPath}/frameworks/@{sdkConfig}-config.xml'/>
+            <arg line='-sp ${compile.path}'/>
+			<arg line='-advanced-telemetry=@{advancedTelemetry}'/>
+            <arg value='-strict'/>
+            <arg value='-warnings=@{showWarnings}'/>
+            <arg value='-debug=@{debug}'/>
+            <arg value='-define+=CONFIG::debug,@{debug}'/>
+            <arg value='-define+=CONFIG::Assert,@{debug}'/>
+            <extra-args/>
+            <arg line='-o @{output}'/>
+        </java>
+    </sequential>
+</macrodef>
+
+<!-- Desktop -->
+
+<macrodef name="run-swf">
+    <attribute name="swf"/>
+    <sequential>
+      <exec executable="${shell.exec}">
+          <arg value="@{swf}"/>
+      </exec>
+    </sequential>
+</macrodef>
+
+<!-- AIR (Mobile) -->
+
+<!-- Package -->
+<macrodef name="adt">
+    <attribute name="target"/>
+    <attribute name="hideAneLibSymbols" default=""/>
+    <attribute name="output"/>
+    <attribute name="descriptor"/>
+    <attribute name="sign.args"/>
+    <attribute name="sdkPath" default="${air.sdk.home}"/>
+    <element name="extra-args" implicit="yes"/>
+    <sequential>
+        <!-- if debug.fdb=true then enable usb debugging -->
+        <condition property="debug.listen" value="-listen 9999" else="">
+            <isset property="debug.fdb"/>
+        </condition>
+        <java jar="@{sdkPath}/lib/adt.jar" fork="true" failonerror="true">
+            <arg value="-package"/>
+            <arg line="-target @{target}"/>
+            <arg line="${debug.listen}"/>
+            <arg line="@{hideAneLibSymbols}"/>
+            <arg line="@{sign.args}"/>
+            <arg value="@{output}"/>
+            <arg value="@{descriptor}"/>
+            <extra-args/>
+        </java>
+    </sequential>
+</macrodef>
+
+<!-- Install -->
+<macrodef name="adt-deploy">
+    <attribute name="platform"/>
+    <attribute name="package"/>
+    <sequential>
+        <java jar="${air.sdk.home}/lib/adt.jar" fork="true" failonerror="true">
+            <arg value="-installApp"/>
+            <arg line="-platform @{platform}"/>
+            <arg line="-package @{package}"/>
+        </java>
+    </sequential>
+</macrodef>
+
+<!-- Run -->
+<macrodef name="adl">
+    <attribute name="profile"/>
+    <attribute name="screensize"/>
+    <attribute name="descriptor"/>
+    <attribute name="approot"/>
+    <attribute name="sdkPath" default="${air.sdk.home}"/>
+	<attribute name="failOnError" default="true"/>
+    <element name="extra-args" implicit="yes"/>
+    <sequential>
+        <exec executable="@{sdkPath}/bin/adl${exe}" failonerror="@{failOnError}">
+            <arg line='-profile @{profile}'/>
+            <arg line='@{screensize}'/>
+            <arg value='@{descriptor}'/>
+            <arg value='@{approot}'/>
+            <extra-args/>
+            <arg line='-- "@{screensize}"'/>
+        </exec>
+    </sequential>
+</macrodef>
+
+</project>
